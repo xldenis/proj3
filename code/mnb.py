@@ -24,7 +24,7 @@ def train(classes, vocab, training_data, features):
     print 'Training %s' % c
     ids_in_class = [x[1] for x in training_data if x[2] == c]
     probs[c] = defaultdict(lambda:1.0 / len(vocab))
-    prior[c] = len(ids_in_class) / float(d)
+    prior[c] = (len(ids_in_class) + 1) / (float(d) + len(classes))
     totalCount = 0
     sum_feat = defaultdict(lambda: 0)
     
@@ -43,7 +43,7 @@ def label(classes, vocab, prior, probs, doc):
   score = {}
   for c in classes:
     score[c] = log(prior[c])
-    for t in words:
+    for t in vocab:
       score[c] += log(probs[c][t])
 
   return max(score, key=score.get), score
@@ -52,9 +52,13 @@ def main():
   classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
   training = load_training()
   random.shuffle(training)
-
   vocab = range(0,256)
-  print training[0]
-  features = count(training, vocab)
-  classifier = train(classes, vocab, training, features)
+  gen = kfold(2, classes, training)
+  for fold in gen:
+    features = count(training, vocab)
+    classifier = train(classes, vocab, fold[0], features)
+    pred = []
+    for d in fold[1]:
+      pred.append(label(classes,*classifier, doc=d))
+    gen.send(pred)
 if  __name__ =='__main__':main()
