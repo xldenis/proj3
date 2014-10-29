@@ -42,10 +42,13 @@ def init_weights(layers):
       mat.append([1 for k in range(layers[i])])
   return mats
 
-def main():
-  w = init_weights([1,2,1,1])
-  print w
-  print evaluate(w, [1])
-  print backprop(w, [1], [0])
 
+def main():
+  w = init_weights([8,3,8])
+  for x in range(8):
+    num = [0]*8
+    num[x] = 1
+    w = backprop(w, num, num)
+  # print w
+  print evaluate(w, [0,1,0,0,0,0,0,0])
 if  __name__ =='__main__':main()
