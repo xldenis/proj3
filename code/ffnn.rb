@@ -57,22 +57,5 @@ end
 
 ann = FFNN.new([8,3,8])
 puts ann.evaluate([0,0,0,0,1,0,0,0]).to_s
-300_000.times do |i|
-puts i if i % 1000 == 0 
-ann.backprop([0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,1])
-ann.backprop([0,0,0,0,0,0,1,0],[0,0,0,0,0,0,1,0])
-ann.backprop([0,0,0,0,0,1,0,0],[0,0,0,0,0,1,0,0])
-ann.backprop([0,0,0,0,1,0,0,0],[0,0,0,0,1,0,0,0])
-ann.backprop([0,0,0,1,0,0,0,0],[0,0,0,1,0,0,0,0])
-ann.backprop([0,0,1,0,0,0,0,0],[0,0,1,0,0,0,0,0])
-ann.backprop([0,1,0,0,0,0,0,0],[0,1,0,0,0,0,0,0])
-ann.backprop([1,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,0])
+400.times do |i|
 end
-puts ann.evaluate([1,0,0,0,0,0,0,0]).map(&:round).to_s
-puts ann.evaluate([0,1,0,0,0,0,0,0]).map(&:round).to_s
-puts ann.evaluate([0,0,1,0,0,0,0,0]).map(&:round).to_s
-puts ann.evaluate([0,0,0,1,0,0,0,0]).map(&:round).to_s
-puts ann.evaluate([0,0,0,0,1,0,0,0]).map(&:round).to_s
-puts ann.evaluate([0,0,0,0,0,1,0,0]).map(&:round).to_s
-puts ann.evaluate([0,0,0,0,0,0,1,0]).map(&:round).to_s
-puts ann.evaluate([0,0,0,0,0,0,0,1]).map(&:round).to_s
