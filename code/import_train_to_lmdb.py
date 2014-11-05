@@ -8,6 +8,7 @@ import png
 import csv
 import array
 import skimage
+import random
 
 def load_output(label_path='data/train_outputs.csv'):
   reader = csv.reader(open(label_path, 'r'),delimiter=',')
@@ -28,12 +29,24 @@ def load_training(training_path='data/train_images'):
   return train
 
 training = load_training()
+# random.shuffle(training)
 
-env = lmdb.open('comp_mnist', create='True')
-txn = env.begin(write=True)
+env = lmdb.open('comp_mnist', create='True', map_size=1073741824)
 
-for data in training:
-  datum = caffe.io.array_to_datum(data[0],data[2])
-  txn.put(str(data[1]), datum.SerializeToString())
-  
-txn.commit()
+training2 = training[:25000]
+with env.begin(write=True) as txn:
+  for data in training2:
+    datum = caffe.io.array_to_datum(data[0],data[2])
+    txn.put(str(data[1]), datum.SerializeToString())
+
+env.close()
+
+env = lmdb.open('comp_mnist_test', create='True', map_size=1073741824)
+
+test = training[25000:]
+with env.begin(write=True) as txn:
+  for data in test:
+    datum = caffe.io.array_to_datum(data[0],data[2])
+    txn.put(str(data[1]), datum.SerializeToString())
+
+env.close()

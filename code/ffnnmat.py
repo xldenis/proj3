@@ -26,7 +26,7 @@ def mat_backprop(weights, x, t):
     outputs.append(o)
 
   e = o - t
-
+  print e
   diags = []
 
   for oi in outputs[1:]:
